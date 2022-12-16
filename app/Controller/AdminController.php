@@ -1,51 +1,33 @@
 <?php
 
 namespace OOP\App\Controller;
+
 use OOP\App\Core\View;
 use OOP\App\Core\Router;
-use OOP\App\Model\Admin;
+use OOP\App\Model\Client;
+use OOP\App\Model\Programs;
+use OOP\App\Model\Collaboration;
 
-class AdminController {
+class AdminController
+{
+    public $header;
+    public $header3;
+    public $header4;
 
-    public function __construct() {    
-        $this->header = new Admin();
-    }
-    public function index(){
-        print_r($this->header->index());
-        // View::render("body", $this->header->index());
-    }
-
-    public function add()
+    public function __construct()
     {
-        $insert = [
-            'name' =>'Lilianne Mather',
-            'username' => 'liliyy',
-            'password' => '39020',
-            'email' => 'lilianne@gmail.com',
-            'created_at' => date('Y-m-d H:i:s'),
-        ];
-        
-        $this->header->insert($insert);
-        Router::redirect('showadmin');
+        $this->header = new Client();
+        $this->header3 = new Programs();
+        $this->header4 = new Collaboration();
     }
-
-     public function delete($id)
+    public function index()
     {
-        $this->header->delete($id);
-        Router::redirect('showadmin');
-    }
 
-    public function update($id){
-        $update = [
-            'name' => 'James Potter',
-            'username' => 'pronks',
-            'password' => '310681',
-            'email' => 'choosenone@gmail.com',
-            'updated_at' => date('Y-m-d H:i:s')
-    ];
-        $this->header->update($update, $id);
-         Router::redirect('showadmin');
+        $data = array(
+            'client_count' => $this->header->count(),
+            'collaboration_count' => $this->header3->count(),
+            'programs_count' => $this->header4->count()
+        );
+        View::admin("index", $data);
     }
-
-  
 }

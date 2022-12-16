@@ -3,15 +3,28 @@ namespace OOP\App\Model;
 use OOP\App\Config\Database;
 
 class Programs extends Database{
-    public function all(){ //all
-        $statement =  self::$conn->prepare("SELECT programs.id, programs.name, branch.name as branch_name, issue_date, due_date, branch.available_seats, price 
-        FROM `programs` 
-        LEFT JOIN branch
-        ON programs.branch_id = branch.id");
+    public function show(){
+        $statement =  self::$conn->prepare("SELECT * FROM programs ");
         $statement->execute();
  
         return $statement->fetchAll(\PDO::FETCH_OBJ);
      }
+
+     public function one($id)
+    {
+        $statement = self::$conn->prepare("SELECT * FROM programs where id=$id");
+        $statement->execute();
+ 
+        return $statement->fetch(\PDO::FETCH_OBJ);
+    }
+
+
+    public function cekprogram($program){
+        $statement = self::$conn->prepare("SELECT * FROM client WHERE name= '$program");
+        $statement->execute($program);
+        return $statement->fetch(\PDO::FETCH_OBJ);
+
+    }
 
      public function insert($data){
         $statement = self::$conn->prepare("INSERT INTO programs(name, branch_id, issue_date, due_date, price, created_at)
@@ -35,4 +48,10 @@ class Programs extends Database{
         return $statement->execute($data);
 
     } 
+
+    public function count(){
+        $statement = self::$conn->prepare("SELECT COUNT(*) from programs");
+        $statement->execute();
+        return $statement->fetchColumn();
+	}
 }

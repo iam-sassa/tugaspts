@@ -7,7 +7,7 @@ class Router
     public static $routes = [];
     public static $baseUrl = 'http://localhost/final/mini-framework/public/';
 
-    public function addRoute($method, $path, $controller, $function, $middleware=[]){
+    public static function addRoute($method, $path, $controller, $function, $middleware=[]){
         self::$routes[] = [
             'method' => $method,
             'path' => $path,
@@ -41,10 +41,10 @@ class Router
             $function = $route['function'];
             $controller = new $route['controller'];
 
-            // foreach ($route['middleware'] as $middleware){
-            //     $instance = new $middleware;
-            //     $instance->before();
-            // }
+            foreach ($route['middleware'] as $middleware){
+                $instance = new $middleware;
+                $instance->before();
+            }
 
             if(is_object($controller) && method_exists
             ($controller, $function)) {

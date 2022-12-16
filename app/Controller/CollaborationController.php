@@ -10,41 +10,48 @@ class CollaborationController {
     public function __construct() {    
         $this->header = new Collaboration();
     }
+
     public function index(){
-        print_r($this->header->all());
+        View::client('collaborationlist', $this->header->show());
     }
 
-    public function add()
-    {
-        $insert = [
-            'name' =>'PT IQ Edukasi',
-            'address' => 'Colearn Headquarter, GoWork Millenium Centennial Center Lt. 42 Jl Jendral Sudirman Kav.25 Jakarta Selatan 12920',
-            'email' => 'info@colearn.id',
-            'phone' => '+62 817 2352 357',
-            'created_at' => date('Y-m-d H:i:s'),
+    public function add(){
+        View::input('collaborationcreate');
+    }
+
+    public function insert(){
+        $data = [
+            'name' => $_POST['name'],
+            'address' => $_POST['address'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'created_at'=>$_POST['created_at']
         ];
-        
-        $this->header->insert($insert);
-        Router::redirect('showcollaboration');
+        $this->header->create($data);
+        Router::redirect('admin/collaboration');
     }
 
-     public function delete($id)
+    public function edit($id){
+        View::edit('collaborationedit', $this->header->one($id));  
+    }
+
+    public function save($id)
+    {   
+        $data = [
+            'name' => $_POST['name'],
+            'address' => $_POST['address'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'updated_at'=>$_POST['updated_at']
+        ];
+        $this->header->update($data, $id);
+        Router::redirect('admin/collaboration');
+    }
+
+    public function delete($id)
     {
-       $this->header->delete($id);
-       Router::redirect('showcollaboration');
+        $this->header->delete( $id);
+        Router::redirect('admin/collaboration');
     }
-
-    public function update($id){
-        $update = [
-            'name' =>'PT Mantappu Berkat Digital',
-            'address' => 'Millennium Centennial Center, Jl. Jenderal Sudirman No. Kav. 25, Kecamatan Setiabudi, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12920',
-            'email' => 'info@colearn.id',
-            'phone' => '+62 817 2352 357',
-            'updated_at' => date('Y-m-d H:i:s')
-    ];
-        $this->header->update($update, $id);
-        Router::redirect('showcollaboration');
-    }
-
   
 }
